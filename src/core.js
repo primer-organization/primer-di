@@ -20,4 +20,32 @@
  */
 (function(){
 
+var diContext = {
+    modules: {}
+};
+
+var utils = {
+    ext: function(){},
+    each: function(collection, callback, scope){
+        var i = 0;
+        for(var k in collection){
+            if(collection.hasOwnPropery(k)){
+                if(callback.call(scope || window, collection[k], k, i) === false){
+                    break;
+                }
+                i++;
+            }
+        }
+    }
+};
+
+    
+var module = function(name, dependencies, moduleDefinition){
+    
+};
+
+
+
+module('utils:ext',[], function(){ return utils.ext; });
+module('utils:each',[], function(){ return utils.each; };
 })();
