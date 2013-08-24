@@ -39,13 +39,48 @@ var utils = {
     }
 };
 
-    
-var module = function(name, dependencies, moduleDefinition){
-    
+var _def = function(context, name, dependencies, moduleDefinition){
+    if(context[name]){
+        // well... nothing for now
+    }
+    var module = {
+        ref: moduleDefinition,
+        resolved: false,
+        dependants:{}
+        available: function(){
+            //utils.each(this.dependants, fun);
+        }
+    };
+    context[name] = module;
+    var deps = {};
+    var allResolved = true;
+    utils.each(dependencies, function(dep){
+        deps[dep] = {
+            resolved = false;
+        };
+        if(!context[dep] || !context[dep].resolved){
+            allResolved = false;
+            deps[dep] = context[dep];
+        }
+        context[dep].dependants[name] = module;
+    });
+    if(allResolved){
+        var args = [];
+        utils.each(dependencies, function(dep){
+            args.push(context[dep].ref);
+        });
+        context[name].ref = context[name].ref.apply(this, args);
+        context[name].resolved = true;
+        context[name].available();
+    }
 };
 
+var _root = {};
 
+var def = function(name, dependencies, moduleDefinition){
+    _def(_root, name, dependencies, moduleDefinition);
+};
 
-module('utils:ext',[], function(){ return utils.ext; });
-module('utils:each',[], function(){ return utils.each; };
+def('utils:ext',[], function(){ return utils.ext; });
+def('utils:each',[], function(){ return utils.each; });
 })();
