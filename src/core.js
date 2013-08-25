@@ -29,7 +29,7 @@ var utils = {
     each: function(collection, callback, scope){
         var i = 0;
         for(var k in collection){
-            if(collection.hasOwnPropery(k)){
+            if(collection.hasOwnProperty(k)){
                 if(callback.call(scope || window, collection[k], k, i) === false){
                     break;
                 }
@@ -43,36 +43,57 @@ var _def = function(context, name, dependencies, moduleDefinition){
     if(context[name]){
         // well... nothing for now
     }
+    context[name] = context[name] || {};
     var module = {
         ref: moduleDefinition,
+        name: name,
         resolved: false,
-        dependants:{}
+        dependants:context[name].dependants || {},
         available: function(){
-            //utils.each(this.dependants, fun);
+            console.log('Module [', name, '] has just become available. Dependent module will be notified: ', this.dependants);
+            utils.each(this.dependants, function(dep){
+                console.log('  -> Notifying ', dep,' to check if satisfied...');
+                dep.checkDependencies();
+            }, this);
+            console.log('All dependant modules have been notified.');
+        },
+        initializeModule: function(resolvedDependencies){
+            console.log('Initializing module ', name);
+            var module = undefined;
+            if(typeof(moduleDefinition) == 'function'){
+                module = moduleDefinition.apply(this, resolvedDependencies);
+            }else{
+                module = moduleDefinition; // or maybe we use this as a config ?
+            }
+            this.ref = module;
+            this.resolved = true;
+            console.log('Module [', name, '] initialized and available.');
+        },
+        checkDependencies: function(){
+            var allSatisfied = true;
+            var resolved = [];
+            console.log('Checking dependencies on module: ', name);
+            utils.each(dependencies, function(dep){
+                console.log('  -> checking: ', dep);
+                if(!context[dep]){
+                    context[dep] = {resolved: false, dependants: {}}; // awaiting to be resolved
+                    console.log('  -> dependency not yet present');
+                }
+                if( !context[dep].resolved ){
+                    allSatisfied = false;
+                }
+                resolved.push(context[dep].ref);
+                context[dep].dependants[name] = module;
+            }, this);
+            if(allSatisfied){
+                console.log('  -> All dependencies available => ', resolved);
+                this.initializeModule(resolved);
+                this.available();
+            }
         }
     };
     context[name] = module;
-    var deps = {};
-    var allResolved = true;
-    utils.each(dependencies, function(dep){
-        deps[dep] = {
-            resolved = false;
-        };
-        if(!context[dep] || !context[dep].resolved){
-            allResolved = false;
-            deps[dep] = context[dep];
-        }
-        context[dep].dependants[name] = module;
-    });
-    if(allResolved){
-        var args = [];
-        utils.each(dependencies, function(dep){
-            args.push(context[dep].ref);
-        });
-        context[name].ref = context[name].ref.apply(this, args);
-        context[name].resolved = true;
-        context[name].available();
-    }
+    module.checkDependencies();
 };
 
 var _root = {};
@@ -83,4 +104,7 @@ var def = function(name, dependencies, moduleDefinition){
 
 def('utils:ext',[], function(){ return utils.ext; });
 def('utils:each',[], function(){ return utils.each; });
+
+
+window.def = def; // FIXME: I don't like the name
 })();
