@@ -13,3 +13,22 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+
+(function(){
+    var NOOP = function(){}; // does nothing
+    def('di:noop',[],function(){
+        return NOOP;
+    });
+    
+    def('di:console', [], function(){
+        if(window.console)
+            return window.console;
+        return {
+            log: NOOP,
+            error: NOOP,
+            debug: NOOP,
+            trace: NOOP,
+            info: NOOP
+        };
+    });    
+})();
