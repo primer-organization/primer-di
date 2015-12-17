@@ -1,0 +1,25 @@
+{
+  "name": "di.js",
+  "description": "Dependecy injection and dependency management framework for javascript.",
+  "main": "index.js",
+  "authors": [
+    "Pavle Jonoski"
+  ],
+  "license": "Apache-2.0",
+  "keywords": [
+    "dependency",
+    "injection",
+    "javascript"
+  ],
+  "moduleType": [
+    "globals"
+  ],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
