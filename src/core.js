@@ -106,5 +106,6 @@ def('utils:ext',[], function(){ return utils.ext; });
 def('utils:each',[], function(){ return utils.each; });
 
 
-window.def = def; // FIXME: I don't like the name
+window.def = def;
+window.define = def;
 })();
