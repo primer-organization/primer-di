@@ -16,7 +16,7 @@
 
 
 /**
- * DI.js core file. This is the dependency injection/management module.
+ * Primer DI core file. This is the dependency injection/management module.
  */
 (function(){
 
