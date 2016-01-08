@@ -25,7 +25,6 @@ var diContext = {
 };
 
 var utils = {
-    ext: function(){},
     each: function(collection, callback, scope){
         var i = 0;
         for(var k in collection){
@@ -102,7 +101,6 @@ var def = function(name, dependencies, moduleDefinition){
     _def(_root, name, dependencies, moduleDefinition);
 };
 
-def('utils:ext',[], function(){ return utils.ext; });
 def('utils:each',[], function(){ return utils.each; });
 
 
