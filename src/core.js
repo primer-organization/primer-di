@@ -40,7 +40,7 @@ var utils = {
 
 var _def = function(context, name, dependencies, moduleDefinition){
     if(context[name]){
-        // well... nothing for now
+        console.warn('The definition of module ', name, 'overrides an exiting module definition.');
     }
     context[name] = context[name] || {};
     var module = {

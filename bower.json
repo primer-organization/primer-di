@@ -1,7 +1,10 @@
 {
   "name": "primer-di",
   "description": "Dependecy injection and dependency management framework for javascript.",
-  "main": "src/core.js",
+  "main": [
+    "src/core.js",
+    "src/helpers.js"
+  ],
   "authors": [
     "Pavle Jonoski"
   ],
