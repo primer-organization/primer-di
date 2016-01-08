@@ -49,15 +49,11 @@ var _def = function(context, name, dependencies, moduleDefinition){
         resolved: false,
         dependants:context[name].dependants || {},
         available: function(){
-            console.log('Module [', name, '] has just become available. Dependent module will be notified: ', this.dependants);
             utils.each(this.dependants, function(dep){
-                console.log('  -> Notifying ', dep,' to check if satisfied...');
                 dep.checkDependencies();
             }, this);
-            console.log('All dependant modules have been notified.');
         },
         initializeModule: function(resolvedDependencies){
-            console.log('Initializing module ', name);
             var module = undefined;
             if(typeof(moduleDefinition) == 'function'){
                 module = moduleDefinition.apply(this, resolvedDependencies);
@@ -66,17 +62,17 @@ var _def = function(context, name, dependencies, moduleDefinition){
             }
             this.ref = module;
             this.resolved = true;
-            console.log('Module [', name, '] initialized and available.');
+            //console.log('Module [', name, '] is available.');
         },
         checkDependencies: function(){
             var allSatisfied = true;
             var resolved = [];
-            console.log('Checking dependencies on module: ', name);
+            if(this.hasDependencyOn(name)){
+              throw new Error('Circular dependency detected for module: ' + name);
+            }
             utils.each(dependencies, function(dep){
-                console.log('  -> checking: ', dep);
                 if(!context[dep]){
                     context[dep] = {resolved: false, dependants: {}}; // awaiting to be resolved
-                    console.log('  -> dependency not yet present');
                 }
                 if( !context[dep].resolved ){
                     allSatisfied = false;
@@ -85,10 +81,24 @@ var _def = function(context, name, dependencies, moduleDefinition){
                 context[dep].dependants[name] = module;
             }, this);
             if(allSatisfied){
-                console.log('  -> All dependencies available => ', resolved);
                 this.initializeModule(resolved);
                 this.available();
             }
+        },
+        hasDependencyOn: function(moduleName){
+          for(var i = 0; i < dependencies.length; i++){
+            var depName = dependencies[i];
+            if ( depName === moduleName){
+              return true;
+            }else{
+              if(context[depName] &&
+                  context[depName].hasDependencyOn &&
+                  context[depName].hasDependencyOn(moduleName)){
+                return true;
+              }
+            }
+          }
+          return false;
         }
     };
     context[name] = module;
