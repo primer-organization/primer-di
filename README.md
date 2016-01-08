@@ -1,18 +1,18 @@
-di.js
+primer-di
 =====
 
-<b>di.js</b> is a dependecy injection and dependency management framework for
+<b>primer-di</b> is a dependecy injection and dependency management framework for
 javascript.
-The main goal of <b>di.js</b> is to provide dependency injection to your application, nothing more and nothing less.
+The main goal of <b>primer-di</b> is to provide dependency injection to your application, nothing more and nothing less.
 It tends to be simple, small, fast and easy.
 
 Use it in your project
 ----------------------
 
 Include the JavaScript file and you're done:
-    <script type="text/javascript" src="di.js"></script>
+    <script type="text/javascript" src="core.js"></script>
 
-module(...)
+def(...)
 --------
 
 
