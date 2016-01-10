@@ -12,17 +12,17 @@ Use it in your project
 If you've downloaded the project locally, you can just insert it to your HTML
 document like so:
 
-```
+```html
 <script type="text/javascript" src="<path_to_primer-di>/src/core.js"></script>
 ```
 With bower:
 
-```
+```bash
 bower install primer-di --save
 ```
 Then include it to your project:
 
-```
+```html
 <script type="text/javascript" src="bower_components/primer-di/src/core.js"></script>
 ```
 
@@ -34,7 +34,7 @@ Once you have installed primer-di, you can start writing some modules for your p
 
 Write your first module:
 
-```
+```javascript
 def('myFirstModule', function(){
   console.log("Hello! I've just defined my first module!");
 });
@@ -43,7 +43,7 @@ def('myFirstModule', function(){
 Now let's define some more module, dependent on each other. Let's say we have some
 services that we want to use. We can write a module:
 
-```
+```javascript
 def('userServices', function(){
   // This is our module factory. It gets called the first time another module
   // requests 'userServices' as a dependency.
@@ -69,7 +69,7 @@ def('userServices', function(){
 
 We can now use ```userServices``` module in different modules of our app:
 
-```
+```javascript
 // in a UI read only user card
 def('uiUserCard', ['userServices'], function(userServices){
     // userServices will be automatically injected here
@@ -97,10 +97,10 @@ def('uiProfileUpdate', ['userServices'], function(userServices){
 A bit more about ```def```
 --------------------------
 
-```def``` (aliased as ```define```) is the main API exposed by **primer-di**.
+The main API exposed by **primer-di** is the function ```def``` (aliased as ```define```).
 The main syntax of the function is:
 
-```
+```javascript
 def(module_name, [dependencies], module_factory | module_definition)
 ```
 
@@ -111,7 +111,8 @@ argument is an object).
 Arguments:
 
 * ```module_name``` - type ```string``` - The name of the module. This is an optional argument, and if not supplied the module is considered to be anonymous (see bellow for the exact syntax on this). If given, the module may be referenced later on by other module by specifying the name in the dependency Array when defining the other module - for example: if we define a module **A**:
-```
+
+```javascript
 def('A', function(){
   return {};
 });
@@ -119,7 +120,7 @@ def('A', function(){
 
 we can inject it later on by its name into other module like so:
 
-```
+```javascript
 def('B', ['A'], function(A){
   // A will be automatically injected.  
 });
