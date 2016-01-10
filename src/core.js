@@ -57,7 +57,10 @@ var _def = function(context, name, dependencies, moduleDefinition){
         initializeModule: function(resolvedDependencies){
             var module = undefined;
             if(typeof(moduleDefinition) == 'function'){
-                module = moduleDefinition.apply(this, resolvedDependencies) || {};
+                module = moduleDefinition.apply(this, resolvedDependencies);
+                if(module === undefined || module === null){
+                  module = {};
+                }
             }else{
                 module = moduleDefinition; // or maybe we use this as a config ?
             }
