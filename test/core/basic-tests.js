@@ -14,6 +14,7 @@
             console.log('Dependency [' + this.name + '] initialized');
             return {name:this.name};
         };
+        
         def('a1',['b1'],depfn);
         def('b1',['c1'],depfn);
         def('c1',[],depfn);
@@ -28,7 +29,7 @@
         }catch(e){
           err = e;
         }
-        
+
         assert.ok(err.message == 'Circular dependency detected for module: b2', 'Circular dependency was not detected');
     });
 

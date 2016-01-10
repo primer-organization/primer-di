@@ -39,7 +39,7 @@ var utils = {
 };
 
 var _def = function(context, name, dependencies, moduleDefinition){
-    if(context[name]){
+    if(context[name] && context[name].defined){
         console.warn('The definition of module ', name, 'overrides an exiting module definition.');
     }
     context[name] = context[name] || {};
@@ -47,6 +47,7 @@ var _def = function(context, name, dependencies, moduleDefinition){
         ref: moduleDefinition,
         name: name,
         resolved: false,
+        defined: true,
         dependants:context[name].dependants || {},
         available: function(){
             utils.each(this.dependants, function(dep){
