@@ -257,7 +257,7 @@ If we investigate what happens, we can see that:
 * First we define the module **B**, it depends on **A** which is not yet available. At this point nothing gets executed.
 * Then we define the module **C**. This module depends on both **A** and **B**, none of which is available yet. Still, nothing happens.
 * Then we define the module **A**. **A** doesn't depend on anything, so it is immediately called. The console logs ```A was defined.```.
-* Then, **primer-di** marks that **A** was defined proceeds to initialize and build **B** which depends only on **A**. When the factory for **B** is
+* Then, **primer-di** marks that **A** was defined and proceeds to initialize and build **B** which depends only on **A**. When the factory for **B** is
 called, the console logs: ```B was defined.```. **primer-di** marks **B** as available as well.
 * Then, **primer-di** proceeds to initialize and build **C** for which both dependencies (**A** and **B**) have been resolved. It executes the
 factory method and logs ```C was defined.```
