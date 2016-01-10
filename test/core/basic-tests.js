@@ -14,7 +14,7 @@
             console.log('Dependency [' + this.name + '] initialized');
             return {name:this.name};
         };
-        
+
         def('a1',['b1'],depfn);
         def('b1',['c1'],depfn);
         def('c1',[],depfn);
@@ -31,6 +31,50 @@
         }
 
         assert.ok(err.message == 'Circular dependency detected for module: b2', 'Circular dependency was not detected');
+    });
+
+    test('define module', function(assert){
+      var moduleFactoryCalled = false;
+      def('m1', [], function(){
+        moduleFactoryCalled = true;
+        return {
+          module: 'm1'
+        };
+      });
+      assert.ok(moduleFactoryCalled);
+    });
+
+    test('define dependent module', function(assert){
+      def('m2', [], function(assert){
+        return {
+          module: 'm2'
+        };
+      });
+      var m3ModuleDefined = false;
+      def('m3', ['m2'], function(m2){
+        assert.ok(m2);
+        assert.ok(m2.module === 'm2');
+        m3ModuleDefined = true;
+        return {
+          module: 'm3'
+        };
+      });
+      assert.ok(m3ModuleDefined);
+    });
+
+    test('define empty module', function(assert){
+      var m4Defined = false;
+      def('m4', [], function(){
+        m4Defined = true;
+        // not returning anything
+      });
+      assert.ok(m4Defined);
+      var m5Defined = false;
+      def('m5', ['m4'], function(m4){
+        m5Defined = true;
+        assert.ok(m4, 'm4 was not defined');
+      });
+      assert.ok(m5Defined);
     });
 
 })();
