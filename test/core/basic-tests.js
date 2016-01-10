@@ -77,4 +77,30 @@
       assert.ok(m5Defined);
     });
 
+    test('Define anonymous module', function(assert){
+      def(function(){
+        assert.ok(true);
+      });
+    });
+
+    test('Define named module without dependencies', function(assert){
+      def('m6', function(){
+        assert.ok(true);
+      })
+    });
+
+    test('Define anonymous module with named dependencies', function(assert){
+      def('m7', function(){
+        return {
+          module: 'm7'
+        };
+      });
+
+      define(['m7'],function(m7){
+        assert.ok(m7);
+        assert.ok(m7.module == 'm7');
+      });
+
+    });
+
 })();

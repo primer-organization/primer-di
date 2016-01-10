@@ -110,10 +110,47 @@ var _def = function(context, name, dependencies, moduleDefinition){
 };
 
 var _root = {};
-
-var def = function(name, dependencies, moduleDefinition){
-    _def(_root, name, dependencies, moduleDefinition);
+var _anonModules = {
+  seq: 0,
+  nextName: function(){
+    return '::__anonimous__::' + (_anonModules.seq++);
+  }
 };
+
+var def = function(){
+  if(!arguments.length){
+    throw new Error('Invalid API usage. You must specify the module factory at least.');
+  }
+  if(arguments.length == 1){
+    if(typeof(arguments[0]) === 'function'){
+      _def(_root, _anonModules.nextName(), [], arguments[0]);
+    }else{
+      throw new Error('You can only define an anonymous module factory without dependencies.');
+    }
+  }else if(arguments.length == 2){
+    var moduleName = undefined;
+    var dependencies = undefined;
+    var moduleDef = undefined;
+
+    if(Array.isArray(arguments[0])){
+      moduleName = _anonModules.nextName();
+      dependencies = arguments[0];
+      moduleDef = arguments[1];
+    }else if(typeof(arguments[0]) == 'string'){
+      moduleName = arguments[0];
+      dependencies = [];
+      moduleDef = arguments[1];
+    }else{
+      throw new Error('Invalid API usage. You can either define an anonymous module with dependencies, or a module with an explicit name.');
+    }
+    _def(_root, moduleName, dependencies, moduleDef);
+  }else if(arguments.length == 3){
+    _def(_root, arguments[0], arguments[1], arguments[2]);
+  }else{
+    throw new Error('Invalid API usage. Too many arguments.');
+  }
+};
+
 
 def('utils:each',[], function(){ return utils.each; });
 
